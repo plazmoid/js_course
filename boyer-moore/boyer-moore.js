@@ -79,16 +79,15 @@ function boyer_moore(raw, templ) {
 	return indexes;
 }
 
-function timeit(fun, ...args) {
-	 var start = Date.now();
-	 var res = fun(...args);
-	 console.log(Date.now() - start);
-	 return res; 
+module.exports = {
+		boyer_moore_horspool:boyer_moore_horspool
 }
 
-fso.readFile('input.txt', 'utf8', function(err, data) {
-	if(err) throw err;
-	
-	var s = data.split('\n');
-	console.log(timeit(boyer_moore, s[0], s[1]));
-})
+if (require.main === module) {
+	fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
+		if(err) throw err;
+		
+		var s = data.split('\n');
+		console.log(timeit(boyer_moore_horspool, s[0], s[1]));
+	});
+}

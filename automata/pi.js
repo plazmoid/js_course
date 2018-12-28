@@ -77,11 +77,19 @@ function automata(s, t) {
 	return indexes;
 }
 
-fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
-	data = data.split('\n');
-	var s = data[0];
-	var t = data[1];
-	console.log(morris_pratt(s, t));
-	//console.log(automata(s, t));
-	//console.log(pi(t + "&" + s, t.length));
-});
+module.exports = {
+	automata: automata,
+	morris_pratt: morris_pratt,
+	pi: pi
+};
+
+if (require.main === module) {
+	fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
+		data = data.split('\n');
+		var s = data[0];
+		var t = data[1];
+		console.log(pi(t + "&" + s, t.length));
+		console.log(morris_pratt(s, t));
+		console.log(automata(s, t));
+	});
+}

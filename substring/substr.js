@@ -66,18 +66,16 @@ function brute_rabin(str, ptrn) {
 	return indexes;
 }
 
-function timeit(fun, ...args) {
-	 var start = Date.now();
-	 var res = fun(...args);
-	 console.log(Date.now() - start);
-	 return res; 
+module.exports = {
+		bruteforce:bruteforce,
+		brutehash:brutehash,
+		brute_rabin:brute_rabin
 }
 
-fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
-	data = data.split('\n');
-	var s = data[0];
-	var t = data[1];
-	console.log(timeit(bruteforce, s, t));
-	console.log(timeit(brutehash, s, t));
-	console.log(timeit(brute_rabin, s, t));
-});
+if (require.main === module) {
+	fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
+		data = data.split('\n');
+		var s = data[0];
+		var t = data[1];
+	});
+}
