@@ -19,7 +19,7 @@ function to_I3E754(num) {
 		num = Math.abs(num);
 		var exp = Math.floor(Math.log2(num));
 		var mnt = num / Math.pow(2, exp);
-		return sgn << 31 | (exp + 127) << 23 | ((mnt * (1 << 23)) & 0x7FFFFF);
+		return sgn << 31 | ((exp + 127) & 0xFF) << 23 | ((mnt * (1 << 23)) & 0x7FFFFF);
 	} else 
 		return num.sgn << 31 | num.exp << 23 | num.mnt;
 }
@@ -71,19 +71,13 @@ function f_operation(num1, num2, op) {
 	return to_I3E754(result);
 }
 
-function parse_(f) {
-	var res = to_I3E754(f);
-	console.log(to_string(res));
-	return res;
-}
-
 function tests() {
 	var a = 5.31337, //num1
 		b = 2.1488, //num2
 		c, //answer
 		fc = 0, //fails counter
 		s, //real answer
-		pres = 2, //presicion
+		pres = 3, //presicion
 		mod = 100.1, //modulus
 		op = '-', //operation
 		total = 800, //tests amount
@@ -123,12 +117,10 @@ fso.readFile('input.txt', 'utf8', function(err, data) {
 		} else if(c == '+' || c == '-')
 			op = c;
 	}
-	fl1 = parse_(parseFloat(fl1));
-	console.log(op);
-	fl2 = parse_(parseFloat(fl2));
-	console.log('=');
+	fl1 = to_I3E754(parseFloat(fl1));
+	fl2 = to_I3E754(parseFloat(fl2));
 	var sum = f_operation(fl1, fl2, op);
-	console.log(to_string(sum));
+	console.log(`${to_string(fl1)} \n${op} \n${to_string(fl2)} \n= \n${to_string(sum)}`);
 
 	//fso.writeFile('code.txt', res, 'utf8', function() {});
 });//*/

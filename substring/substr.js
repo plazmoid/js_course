@@ -2,11 +2,21 @@ var fso = require('fs');
 
 
 function hashcode(str) {
-	return str.split('').reduce(function(a, b) {return a + b.charCodeAt(0)}, 0);
+	var s = 0;
+	for(var i of str) {
+		s += i.charCodeAt(0);
+	}
+	return s;
+	//return str.split('').reduce(function(a, b) {return a + b.charCodeAt(0)}, 0);
 }
 
 function rabin_carp_hash(str) {
 	var strlen = str.length;
+	/*var s = 0;
+	for(var i of str) {
+		s += (i.charCodeAt(0) * Math.pow(2, strlen - str.indexOf(i)))
+	}
+	return s;*/
 	return str.split('').reduce(function(a, b) {return a + (b.charCodeAt(0) * Math.pow(2, strlen - str.indexOf(b)))}, 0);
 }
 
@@ -22,31 +32,52 @@ function bruteforce(str, ptrn) {
 	var ptrn_len = ptrn.length;
 	for(var i = 0; i < str.length - ptrn_len + 1; i++) {
 		if(if_substr(str.substring(i, i + ptrn_len), ptrn))
-			indexes.push(i + 1);
+			indexes.push(i);
 	}	
 	return indexes;
 }
 
-function brutehash(str, ptrn, hashfunc) {
+function brutehash(str, ptrn) {
 	var curstr;
 	var indexes = [];
 	var ptrn_len = ptrn.length;
-	var ptrn_hash = hashfunc(ptrn);
+	var ptrn_hash = hashcode(ptrn);
 	for(var i = 0; i < str.length - ptrn_len + 1; i++) {
 		curstr = str.substring(i, i + ptrn_len);
-		if(hashfunc(curstr) === ptrn_hash)
+		if(hashcode(curstr) === ptrn_hash)
 			if(if_substr(curstr, ptrn))
-				indexes.push(i + 1);
+				indexes.push(i);
 	}	
 	return indexes;
 }
 
 
-fso.readFile('input.txt', 'utf8', function(err, data) {
+function brute_rabin(str, ptrn) {
+	var curstr;
+	var indexes = [];
+	var ptrn_len = ptrn.length;
+	var ptrn_hash = rabin_carp_hash(ptrn);
+	for(var i = 0; i < str.length - ptrn_len + 1; i++) {
+		curstr = str.substring(i, i + ptrn_len);
+		if(rabin_carp_hash(curstr) === ptrn_hash)
+			if(if_substr(curstr, ptrn))
+				indexes.push(i);
+	}	
+	return indexes;
+}
+
+function timeit(fun, ...args) {
+	 var start = Date.now();
+	 var res = fun(...args);
+	 console.log(Date.now() - start);
+	 return res; 
+}
+
+fso.readFile('../shrd_input.txt', 'utf8', function(err, data) {
 	data = data.split('\n');
 	var s = data[0];
 	var t = data[1];
-	console.log(bruteforce(s, t));
-	console.log(brutehash(s, t, hashcode));
-	console.log(brutehash(s, t, rabin_carp_hash));
+	console.log(timeit(bruteforce, s, t));
+	console.log(timeit(brutehash, s, t));
+	console.log(timeit(brute_rabin, s, t));
 });

@@ -2,7 +2,6 @@ function getBaseLog(x, y) {
   return x > 1 ? Math.log(y) / Math.log(x) : 0;
 }
 
-
 var readline = require('readline');
 
 var rl = readline.createInterface({
@@ -24,7 +23,6 @@ rl.on('line', function (line) {
 	var alph_len = Object.keys(alph).length;
 	var sum = 0;
 	for(var k in alph) {
-	  
 		sum += (alph[k]/ln_len) * getBaseLog(alph_len, alph[k]/ln_len);
 		console.log(k, alph[k]/ln_len);
 	}
